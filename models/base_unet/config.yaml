@@ -1,0 +1,8 @@
+base:
+  dim: 64
+  channels: 3
+  dim_mults:
+    - 1
+    - 2
+    - 4
+    - 8

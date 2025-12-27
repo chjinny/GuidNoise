@@ -1,0 +1,48 @@
+model:
+  model_name: base_unet
+  type_name: base
+diffusion: 
+  objective: 'pred_v' 
+  timesteps: 200
+  sampling_timesteps: 50
+  beta_schedule: 'sigmoid' 
+  loss: 
+    diffusion : 1
+    refine : -1
+  seed_noise:
+    random_seed: 0
+    device : 'A6000' # 'A6000', 'cpu' 
+optimizer:
+  name: AdamW
+  lr: !!float 1e-5
+  params:
+    weight_decay: 0.0
+    betas: [0.9, 0.999]
+    eps: !!float 1e-08
+metrics:
+  - akld
+  - kld
+data:
+  train:
+    lq_dir: ../../data/sidd/SIDD_Medium_Srgb/256
+    lq_filter: '*NOISY*.PNG'
+    lq_name_filter: 'NOISY'
+    hq_dir: ../../data/sidd/SIDD_Medium_Srgb/256
+    hq_filter: '*GT*.PNG'
+    hq_name_filter: 'GT'
+    batch_size: 4
+    crop_size: 256
+    num_limit: ~
+  val:
+    lq_dir: ../../data/sidd/validation/input/
+    lq_filter: '*.png'
+    lq_name_filter: ''
+    hq_dir: ../../data/sidd/validation/groundtruth/
+    hq_filter: '*.png'
+    hq_name_filter: ''
+    batch_size: 1
+    crop_size: 256
+    num_limit: ~
+max_iteration: 300000
+val_interval: 10000
+checkpoint_path: ./checkpoints
